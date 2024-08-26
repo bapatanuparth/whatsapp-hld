@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 
 const Chat = () => {
-  const [msg, setMsg] = new useState("dummy msg");
+  const [msg, setMsg] = new useState("");
   const [socket, setSocket] = new useState(null);
 
   useEffect(() => {

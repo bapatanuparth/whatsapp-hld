@@ -5,6 +5,7 @@ import http from "http";
 
 const app = express();
 dotenv.config();
+
 const port = process.env.PORT || 5000;
 const server = http.createServer(app); //create a simple HTTP server
 const io = new Server(server, {
@@ -16,6 +17,9 @@ const io = new Server(server, {
 
 io.on("connection", (socket) => {
   console.log("client is connected");
+  socket.on("chat msg", (msg) => {
+    console.log("Message received" + msg);
+  });
 });
 
 app.get("/", (req, res) => {

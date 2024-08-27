@@ -18,6 +18,7 @@ const io = new Server(server, {
 io.on("connection", (socket) => {
   console.log("client is connected");
   socket.on("chat msg", (msg) => {
+    socket.broadcast.emit("chat msg", msg);
     console.log("Message received" + msg);
   });
 });

@@ -1,6 +1,7 @@
 import User from "../models/user.model.js";
 
 import bcrypt from "bcrypt";
+import generateJWTTokenAndSetCookie from "../utils/generateToken.js";
 
 const signup = async (req, res) => {
   console.log("inside controller");
@@ -12,6 +13,7 @@ const signup = async (req, res) => {
       res.status(201).json({ message: "Username already exists" });
     } else {
       const user = new User({ username: username, password: hashedPassword });
+      generateJWTTokenAndSetCookie(user._id, res);
       await user.save();
       res.status(201).json({ message: "User created" });
     }

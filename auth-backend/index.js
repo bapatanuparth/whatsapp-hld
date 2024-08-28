@@ -10,7 +10,13 @@ app.use(express.json());
 
 const port = process.env.PORT || 5000;
 // const server = http.createServer(app); //create a simple HTTP server
-app.use(cors());
+app.use(
+  cors({
+    credentials: true,
+    origin: "http://localhost:3000",
+  })
+);
+
 app.get("/", (req, res) => {
   res.send("Congratulations! Landing page");
 });

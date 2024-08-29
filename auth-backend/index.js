@@ -1,12 +1,15 @@
 import express from "express";
 import dotenv from "dotenv";
 import authRouter from "./routes/auth.route.js";
+import usersRouter from "./routes/users.route.js";
 import connectToMongoDB from "./db/mongoDBConnection.js";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 
 const app = express();
 dotenv.config();
-app.use(express.json());
+app.use(express.json()); //this is a middleware
+app.use(cookieParser());
 
 const port = process.env.PORT || 5000;
 // const server = http.createServer(app); //create a simple HTTP server
@@ -22,6 +25,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/auth", authRouter);
+app.use("/users", usersRouter);
 
 app.listen(port, () => {
   connectToMongoDB();

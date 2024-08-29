@@ -26,8 +26,7 @@ const Auth = () => {
       if (res.data.message === "Username already exists") {
         alert("Username already exists");
       } else {
-        alert("msg sent");
-        // router.push("/chat");
+        router.push("/chat");
       }
     } catch (error) {
       console.log("Error in signup function : ", error.message);
@@ -49,8 +48,7 @@ const Auth = () => {
         }
       );
       console.log(res);
-      alert("user logged in");
-      // router.push("/chat");
+      router.push("/chat");
     } catch (error) {
       console.log("Error in login function : ", error.message);
     }

@@ -15,13 +15,22 @@ const io = new Server(server, {
   },
 });
 
+const userSocketMap = {};
+
 io.on("connection", (socket) => {
   console.log("client is connected");
   const username = socket.handshake.query.username;
   console.log(username);
+
+  userSocketMap[username] = socket; //store the user connected to the socket in map
+
   socket.on("chat msg", (msg) => {
-    socket.broadcast.emit("chat msg", msg);
-    console.log("Message received" + msg);
+    // socket.broadcast.emit("chat msg", msg);
+    console.log("Message received" + msg.receiver);
+    const receiverSocket = userSocketMap[msg.receiver]; //identify the right socket
+    if (receiverSocket) {
+      receiverSocket.emit("chat msg", msg.text);
+    }
   });
 });
 

@@ -6,14 +6,16 @@ import { useUsersStore } from "../zustand/useUserStore";
 import axios from "axios";
 import ChatUsers from "../_components/ChatUsers";
 import { useChatReceiverStore } from "../zustand/useChatReceiverStore";
+import { useChatMsgsStore } from "../zustand/useChatMsgStore";
 
 const Chat = () => {
-  const [msgs, setMsgs] = useState([]);
+  // const [msgs, setMsgs] = useState([]);
   const [msg, setMsg] = new useState("");
   const [socket, setSocket] = new useState(null);
   const { authName } = useAuthStore();
   const { updateUsers } = useUsersStore();
   const chatReceiver = useChatReceiverStore((state) => state.chatReceiver);
+  const { chatMsgs, updateChatMsgs } = useChatMsgsStore();
 
   useEffect(() => {
     console.log(authName);
@@ -26,10 +28,11 @@ const Chat = () => {
 
     newsocket.on("chat msg", (msgrecv) => {
       console.log("received msg on client " + msgrecv);
-      setMsgs((prevMsgs) => [
-        ...prevMsgs,
-        { text: msgrecv, sentByCurrUser: false },
-      ]);
+      updateChatMsgs([...chatMsgs, msg]);
+      // setMsgs((prevMsgs) => [
+      //   ...prevMsgs,
+      //   { text: msgrecv, sentByCurrUser: false },
+      // ]);
     });
 
     const getUserData = async () => {
@@ -53,7 +56,8 @@ const Chat = () => {
     };
     if (socket) {
       socket.emit("chat msg", newMsg);
-      setMsgs((prevMsgs) => [...prevMsgs, { text: msg, sentByCurrUser: true }]);
+      updateChatMsgs([...chatMsgs, newMsg]);
+      // setMsgs((prevMsgs) => [...prevMsgs, { text: msg, sentByCurrUser: true }]);
       setMsg("");
     }
   };
@@ -63,24 +67,24 @@ const Chat = () => {
       <div className="w-1/5">
         <ChatUsers></ChatUsers>
       </div>
-      <div className="w-4/5 h-screen flex flex-col">
+      <div className="w-4/5  flex flex-col">
         <div className="h-1/5">
           <h1>
             {authName} is chatting with {chatReceiver}
           </h1>
         </div>
         <div className="msgs-container h-3/5 overflow-scroll">
-          {msgs.map((msg, index) => (
+          {chatMsgs?.map((msg, index) => (
             <div
               key={index}
-              className={` m-3 ${
-                msg.sentByCurrUser ? "text-right" : "text-left"
+              className={` m-3 p-1 ${
+                msg.sender === authName ? "text-right" : "text-left"
               }`}
             >
               <span
                 className={`${
-                  msg.sentByCurrUser ? "bg-blue-200" : "bg-green-200"
-                } p-3 rounded-lg`}
+                  msg.sender === authName ? "bg-blue-200" : "bg-green-200"
+                }m-3 p-3 rounded-lg`}
               >
                 {msg.text}
               </span>

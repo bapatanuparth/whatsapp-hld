@@ -5,9 +5,17 @@ import http from "http";
 import connectToMongoDB from "./db/mongoDBConnection.js";
 import { addMsgToConversation } from "./controllers/msgs.controller.js";
 import msgRouter from "./routes/msgs.route.js";
+import cors from "cors";
 
 const app = express();
 dotenv.config();
+
+app.use(
+  cors({
+    origin: "http://localhost:3000", // Allow requests from your frontend
+    credentials: true, // Include credentials if needed (cookies, authorization headers)
+  })
+);
 
 const port = process.env.PORT || 5000;
 const server = http.createServer(app); //create a simple HTTP server

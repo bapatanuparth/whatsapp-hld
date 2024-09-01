@@ -29,7 +29,7 @@ const getMsgsForConversation = async (req, res) => {
     });
     if (!conversation) {
       console.log("conversation not found");
-      return res.json({});
+      return res.json([]);
     }
     return res.json(conversation.msgs);
   } catch (error) {

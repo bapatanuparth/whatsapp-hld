@@ -2,6 +2,9 @@ import express from "express";
 import dotenv from "dotenv";
 import { Server } from "socket.io";
 import http from "http";
+import connectToMongoDB from "./db/mongoDBConnection.js";
+import { addMsgToConversation } from "./controllers/msgs.controller.js";
+import msgRouter from "./routes/msgs.route.js";
 
 const app = express();
 dotenv.config();
@@ -31,6 +34,11 @@ io.on("connection", (socket) => {
     if (receiverSocket) {
       receiverSocket.emit("chat msg", msg.text);
     }
+    addMsgToConversation([msg.sender, msg.receiver], {
+      text: msg.text,
+      sender: msg.sender,
+      receiver: msg.receiver,
+    });
   });
 });
 
@@ -38,7 +46,10 @@ app.get("/", (req, res) => {
   res.send("Congratulations! Landing page");
 });
 
+app.use("/msgs", msgRouter);
+
 server.listen(port, () => {
+  connectToMongoDB();
   //you have to make sure to listen on .server and not on .app
   console.log(`Server is listening at http://localhost:${port}`);
 });

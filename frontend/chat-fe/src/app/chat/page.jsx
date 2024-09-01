@@ -5,6 +5,7 @@ import { useAuthStore } from "../zustand/useAuthStore";
 import { useUsersStore } from "../zustand/useUserStore";
 import axios from "axios";
 import ChatUsers from "../_components/ChatUsers";
+import { useChatReceiverStore } from "../zustand/useChatReceiverStore";
 
 const Chat = () => {
   const [msgs, setMsgs] = useState([]);
@@ -12,6 +13,7 @@ const Chat = () => {
   const [socket, setSocket] = new useState(null);
   const { authName } = useAuthStore();
   const { updateUsers } = useUsersStore();
+  const chatReceiver = useChatReceiverStore((state) => state.chatReceiver);
 
   useEffect(() => {
     console.log(authName);
@@ -47,7 +49,7 @@ const Chat = () => {
     const newMsg = {
       text: msg,
       sender: authName,
-      receiver: "amit",
+      receiver: chatReceiver,
     };
     if (socket) {
       socket.emit("chat msg", newMsg);
@@ -63,7 +65,9 @@ const Chat = () => {
       </div>
       <div className="w-4/5 h-screen flex flex-col">
         <div className="h-1/5">
-          <h1>{authName} is chatting with Recevier</h1>
+          <h1>
+            {authName} is chatting with {chatReceiver}
+          </h1>
         </div>
         <div className="msgs-container h-3/5 overflow-scroll">
           {msgs.map((msg, index) => (

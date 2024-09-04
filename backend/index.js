@@ -6,6 +6,7 @@ import connectToMongoDB from "./db/mongoDBConnection.js";
 import { addMsgToConversation } from "./controllers/msgs.controller.js";
 import msgRouter from "./routes/msgs.route.js";
 import cors from "cors";
+import { subscribe, publish } from "./redis/msgsPubSub.js";
 
 const app = express();
 dotenv.config();
@@ -34,6 +35,10 @@ io.on("connection", (socket) => {
   console.log(username);
 
   userSocketMap[username] = socket; //store the user connected to the socket in map
+  const channelName = `chat_${username}`;
+  subscribe(channelName, (msg) => {
+    socket.emit("chat msg", JSON.parse(msg));
+  });
 
   socket.on("chat msg", (msg) => {
     // socket.broadcast.emit("chat msg", msg);
@@ -41,7 +46,11 @@ io.on("connection", (socket) => {
     const receiverSocket = userSocketMap[msg.receiver]; //identify the right socket
     if (receiverSocket) {
       receiverSocket.emit("chat msg", msg.text);
+    } else {
+      const channelName = `chat_${msg.receiver}`;
+      publish(channelName, JSON.stringify(msg));
     }
+
     addMsgToConversation([msg.sender, msg.receiver], {
       text: msg.text,
       sender: msg.sender,

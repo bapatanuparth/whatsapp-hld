@@ -28,7 +28,10 @@ const Chat = () => {
 
     newsocket.on("chat msg", (msgrecv) => {
       console.log("received msg on client " + msgrecv);
-      updateChatMsgs([...chatMsgs, msg]);
+      console.log(msgrecv);
+      console.log(chatMsgs);
+      updateChatMsgs([...chatMsgs, msgrecv]);
+
       // setMsgs((prevMsgs) => [
       //   ...prevMsgs,
       //   { text: msgrecv, sentByCurrUser: false },
@@ -84,7 +87,7 @@ const Chat = () => {
               <span
                 className={`${
                   msg.sender === authName ? "bg-blue-200" : "bg-green-200"
-                }m-3 p-3 rounded-lg`}
+                } m-3 p-3 rounded-lg`}
               >
                 {msg.text}
               </span>

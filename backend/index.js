@@ -44,12 +44,14 @@ io.on("connection", (socket) => {
     // socket.broadcast.emit("chat msg", msg);
     console.log("Message received" + msg.receiver);
     const receiverSocket = userSocketMap[msg.receiver]; //identify the right socket
-    if (receiverSocket) {
-      receiverSocket.emit("chat msg", msg.text);
-    } else {
-      const channelName = `chat_${msg.receiver}`;
-      publish(channelName, JSON.stringify(msg));
-    }
+    // if (receiverSocket) {
+    //   //sender receiver on same backend
+    //   receiverSocket.emit("chat msg", msg);
+    // } else {
+    //sender receiver on different backend
+    const channelName = `chat_${msg.receiver}`;
+    publish(channelName, JSON.stringify(msg));
+    // }
 
     addMsgToConversation([msg.sender, msg.receiver], {
       text: msg.text,

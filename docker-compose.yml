@@ -26,11 +26,3 @@ services:
       - "3000:3000"
     depends_on:
       - backend # Wait for backend service to be ready before starting frontend
-
-  frontend2:
-    build:
-      context: ./frontend/chat-fe_2 # Path to the frontend Dockerfile
-    ports:
-      - "3001:3000"
-    depends_on:
-      - backend # Wait for backend service to be ready before starting frontend

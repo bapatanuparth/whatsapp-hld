@@ -30,6 +30,7 @@ const ChatUsers = () => {
         }
       );
       if (res.data.length !== 0) {
+        console.log(res.data);
         updateChatMsgs(res.data);
       } else {
         updateChatMsgs([]);

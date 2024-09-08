@@ -3,22 +3,16 @@ version: "3.8"
 services:
   backend:
     image: bapatanuparth/chat-backend:lts
-    build:
-      context: ./backend # Path to the backend Dockerfile
     ports:
       - "8081:8081"
 
   auth-backend:
     image: bapatanuparth/auth-backend:lts
-    build:
-      context: ./auth-backend # Path to the backend Dockerfile
     ports:
       - "5000:5000"
 
   frontend:
     image: bapatanuparth/chat-frontend:lts
-    build:
-      context: ./frontend/chat-fe # Path to the frontend Dockerfile
     ports:
       - "3000:3000"
     depends_on:
